@@ -1,8 +1,7 @@
 #include "FlightSchedule.h"
 #include <iostream>
-#include <stdexcept>
-#include "./FlightSchedule.h"
-#include "./Flight.h"
+#include <vector>
+#include <algorithm>
 using namespace std;
 
 // Constructor for initializing flight schedule
@@ -10,9 +9,8 @@ FlightSchedule::FlightSchedule(string scheduleID, Flight* flight, string departu
     : scheduleID(scheduleID), flight(flight), departureTime(departureTime), arrivalTime(arrivalTime) {}
 
 // View schedule details
-void FlightSchedule::viewSchedule() {
-    cout << "Flight Schedule Details:" << endl;
-    cout << "Schedule ID: " << scheduleID << endl;
+void FlightSchedule::viewSchedule() const {
+    cout << "Flight Schedule ID: " << scheduleID << endl;
     cout << "Flight ID: " << flight->getFlightID() << endl;
     cout << "Departure Time: " << departureTime << endl;
     cout << "Arrival Time: " << arrivalTime << endl;
@@ -20,23 +18,31 @@ void FlightSchedule::viewSchedule() {
 
 // Edit flight schedule
 void FlightSchedule::editSchedule() {
-    cout << "Editing flight schedule..." << endl;
-    cout << "Enter new departure time: ";
+    cout << "Editing schedule for Flight ID: " << flight->getFlightID() << endl;
+    cout << "Enter new Departure Time (HH:MM): ";
     cin >> departureTime;
-    cout << "Enter new arrival time: ";
+    cout << "Enter new Arrival Time (HH:MM): ";
     cin >> arrivalTime;
-    cout << "Flight schedule updated!" << endl;
+    cout << "Schedule updated!" << endl;
 }
 
-// Getters for schedule details
-string FlightSchedule::getScheduleID() const {
-    return scheduleID;
+// Cancel the flight schedule
+void FlightSchedule::cancelSchedule() {
+    cout << "Canceling schedule for Flight ID: " << flight->getFlightID() << endl;
+    // Logic for canceling the schedule
+    // You can add functionality to remove this schedule from a global schedule list
+    cout << "Schedule canceled!" << endl;
 }
 
-string FlightSchedule::getDepartureTime() const {
-    return departureTime;
-}
-
-string FlightSchedule::getArrivalTime() const {
-    return arrivalTime;
+// Check if the schedule conflicts with another schedule
+bool FlightSchedule::isScheduleConflict(const vector<FlightSchedule*>& allSchedules) const {
+    for (const auto& schedule : allSchedules) {
+        if (schedule->getFlight() == this->flight) {
+            // Check if departure times or arrival times overlap with any existing schedule
+            if (schedule->getDepartureTime() == this->departureTime || schedule->getArrivalTime() == this->arrivalTime) {
+                return true; // Conflict found
+            }
+        }
+    }
+    return false; // No conflict
 }
