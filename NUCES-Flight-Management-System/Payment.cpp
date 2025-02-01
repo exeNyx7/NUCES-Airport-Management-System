@@ -1,11 +1,12 @@
 #include "Payment.h"
+#include "Booking.h"  // Include the Booking class header for association
 #include <iostream>
 #include <regex> // For validating payment method (optional)
 using namespace std;
 
 // Constructor for initializing payment details
-Payment::Payment(string paymentID, double amount, string paymentMethod, string paymentDate)
-    : paymentID(paymentID), amount(amount), paymentMethod(paymentMethod), paymentDate(paymentDate), paymentStatus("Pending") {}
+Payment::Payment(string paymentID, double amount, string paymentMethod, string paymentDate, Booking* booking)
+    : paymentID(paymentID), amount(amount), paymentMethod(paymentMethod), paymentDate(paymentDate), paymentStatus("Pending"), associatedBooking(booking) {}
 
 // Process the payment (simplified)
 bool Payment::processPayment() {
@@ -59,4 +60,8 @@ void Payment::displayPaymentDetails() const {
     cout << "Payment Method: " << paymentMethod << endl;
     cout << "Payment Date: " << paymentDate << endl;
     cout << "Payment Status: " << paymentStatus << endl;
+
+    if (associatedBooking) {
+        cout << "Associated Booking ID: " << associatedBooking->getBookingID() << endl;
+    }
 }
