@@ -49,4 +49,25 @@ void Passenger::updateProfile() {
 void Passenger::bookFlight() {
     cout << "Booking flight..." << endl;
     // Assume flight and booking logic here
-    cout << "
+    cout << "Flight booked!" << endl;
+}
+
+// View a booking
+void Passenger::viewBooking() {
+    cout << "Viewing booking details..." << endl;
+}
+
+// Cancel a booking
+void Passenger::cancelBooking() {
+    cout << "Booking canceled. 25% penalty applied." << endl;
+    // Logic for cancellation with penalty
+}
+
+// Update travel profile
+void Passenger::updateTravelProfile() {
+    string country;
+    cout << "Enter visited country to add to travel history: ";
+    cin >> country;
+    travelHistory.push_back(country);
+    cout << "Travel profile updated!" << endl;
+}
