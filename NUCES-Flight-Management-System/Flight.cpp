@@ -1,5 +1,8 @@
 #include "Flight.h"
+#include <fstream>
 #include <iostream>
+#include <vector>
+#include <sstream>
 using namespace std;
 
 // Constructor for initializing flight details
@@ -57,3 +60,4 @@ bool Flight::bookBusinessSeat() {
         return false;
     }
 }
+

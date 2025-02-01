@@ -2,6 +2,8 @@
 #define FLIGHT_H
 
 #include <string>
+#include <vector>
+#include <memory>  // Include this for using unique_ptr
 using namespace std;
 
 class Flight {
@@ -45,6 +47,7 @@ public:
     // Methods to book economy and business class seats
     bool bookEconomySeat();
     bool bookBusinessSeat();
+
 };
 
 #endif // FLIGHT_H

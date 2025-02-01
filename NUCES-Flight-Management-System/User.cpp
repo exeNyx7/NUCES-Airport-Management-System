@@ -1,6 +1,9 @@
 #include "User.h"
+#include <fstream>
 #include <iostream>
 #include <regex>
+#include <vector>
+#include "Passenger.h"
 using namespace std;
 
 // Constructor to initialize user details

@@ -27,6 +27,10 @@ public:
     string getPaymentStatus() const { return paymentStatus; }
     string getBookingStatus() const { return bookingStatus; }
 
+    // Setter methods for updating booking details
+    void setBookingStatus(const string& status);
+    void setPaymentStatus(const string& status);
+
     // Method to get and display booking details
     void getBookingDetails() const;
 
@@ -44,6 +48,7 @@ public:
 
     // Refund payment for the booking
     void refundPayment();
+
 };
 
 #endif // BOOKING_H

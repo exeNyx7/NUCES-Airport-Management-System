@@ -7,14 +7,21 @@
 #include "Flight.h"
 #include "Booking.h"
 #include "Payment.h"
-#include "Validation.h"
+#include "Validation.h" 
+#include "FileHandler.h"
+//#include "FileHandling.h"
 using namespace std;
 
 int main() {
     // Initialize lists for users and flights
-    vector<unique_ptr<User>> users;  // Store users (admin and passenger)
-    vector<unique_ptr<Flight>> flights;  // Store flights
-    vector<unique_ptr<Booking>> bookings;  // Store bookings
+    vector<unique_ptr<User>> users;
+    vector<unique_ptr<Flight>> flights;
+    vector<unique_ptr<Booking>> bookings;
+
+    // Load existing data
+    loadUsersFromFile(users);
+    loadFlightsFromFile(flights);
+    loadBookingsFromFile(bookings, flights, users);
 
     // Create a sample admin and a passenger
     unique_ptr<Admin> admin = make_unique<Admin>("admin", "admin@nafs.com", "Admin@1234", "12345-1234567-1", "admin01");
@@ -143,6 +150,10 @@ int main() {
             }
         }
         else if (choice == 3) {
+            // Write data back to files when exiting
+            writeUsersToFile(users);
+            writeFlightsToFile(flights);
+            writeBookingsToFile(bookings);
             break;  // Exit the program
         }
         else {

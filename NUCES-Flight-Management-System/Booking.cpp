@@ -1,11 +1,24 @@
 #include "Booking.h"
+#include <fstream>
 #include <iostream>
+#include <vector>
 #include <string>
+#include <sstream>
+
 using namespace std;
 
 // Constructor for initializing booking details
 Booking::Booking(string bookingID, Flight* flight, Passenger* passenger, string seatClass)
     : bookingID(bookingID), flight(flight), passenger(passenger), seatClass(seatClass), paymentStatus("Pending"), bookingStatus("Pending") {}
+
+// Setter methods for booking status and payment status
+void Booking::setBookingStatus(const string& status) {
+    bookingStatus = status;
+}
+
+void Booking::setPaymentStatus(const string& status) {
+    paymentStatus = status;
+}
 
 // Get and display booking details
 void Booking::getBookingDetails() const {
@@ -111,3 +124,5 @@ void Booking::refundPayment() {
         cout << "No payment has been made, so no refund is needed." << endl;
     }
 }
+
+

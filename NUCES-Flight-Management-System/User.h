@@ -2,9 +2,14 @@
 #define USER_H
 
 #include <string>
+#include <vector>
+#include <memory>
 using namespace std;
 
-// Base class for common user attributes and methods
+// Forward declaration of classes
+class Flight;
+class Booking;
+
 class User {
 protected:
     string name;
@@ -22,10 +27,8 @@ public:
     // Virtual login and logout methods (to be implemented in derived classes)
     virtual void login() = 0;
     virtual void logout() = 0;
-
-    // View and update user profile
-    virtual void viewProfile();
-    virtual void updateProfile();
+    virtual void viewProfile() = 0;
+    virtual void updateProfile() = 0;
 
     // Getters and setters
     string getName() const { return name; }
@@ -39,6 +42,7 @@ public:
 
     string getCNIC() const { return CNIC; }
     void setCNIC(const string& CNIC) { this->CNIC = CNIC; }
+
 };
 
 #endif // USER_H
