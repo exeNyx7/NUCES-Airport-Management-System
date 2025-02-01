@@ -6,7 +6,7 @@
 #include <regex>
 using namespace std;
 
-// Validation class to validate CNIC, password, and other inputs
+// Validation class to validate CNIC, password, and other inputs.
 class Validation {
 public:
     // Method to validate CNIC (13 digits)
