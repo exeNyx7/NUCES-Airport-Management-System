@@ -28,71 +28,51 @@ void Passenger::login() {
     }
 }
 
-// Book a flight for Passenger
-void Passenger::bookFlight(vector<unique_ptr<Flight>>& availableFlights, vector<unique_ptr<Booking>>& bookings) {
-    cout << "Available Flights: " << endl;
-    for (int i = 0; i < availableFlights.size(); i++) {
-        cout << i + 1 << ". Flight ID: " << availableFlights[i]->getFlightID() << " from " << availableFlights[i]->getDepartureCity()
-            << " to " << availableFlights[i]->getArrivalCity() << " (" << availableFlights[i]->getDuration() << " hours)" << endl;
+void Passenger::bookFlight(vector<unique_ptr<Flight>>& flights, vector<unique_ptr<Booking>>& bookings) {
+    cout << "Available Flights:" << endl;
+    for (int i = 0; i < flights.size(); i++) {
+        flights[i]->getFlightDetails();  // Display available flights
     }
 
-    int flightChoice;
-    cout << "Enter the number of the flight you wish to book: ";
-    cin >> flightChoice;
+    string flightID;
+    cout << "Enter the Flight ID to book: ";
+    cin >> flightID;
 
-    if (flightChoice < 1 || flightChoice > availableFlights.size()) {
-        cout << "Invalid flight choice!" << endl;
-        return;
-    }
-
-    unique_ptr<Flight>& selectedFlight = availableFlights[flightChoice - 1];
-
-    // Ask for seat class choice
     string seatClass;
-    cout << "Choose seat class (Economy/Business): ";
+    cout << "Enter seat class (Economy/Business): ";
     cin >> seatClass;
 
-    if (seatClass != "Economy" && seatClass != "Business") {
-        cout << "Invalid seat class!" << endl;
-        return;
+    // Find the selected flight
+    Flight* selectedFlight = nullptr;
+    for (auto& flight : flights) {
+        if (flight->getFlightID() == flightID) {
+            selectedFlight = flight.get();
+            break;
+        }
     }
 
-    bool seatBooked = false;
-    if (seatClass == "Economy") {
-        seatBooked = selectedFlight->bookEconomySeat();
+    if (selectedFlight) {
+        // Create a booking
+        string bookingID = "BKG" + to_string(bookings.size() + 1); // Simple booking ID generation
+        unique_ptr<Booking> newBooking = make_unique<Booking>(bookingID, selectedFlight, this, seatClass);
+        newBooking->createBooking();
+        bookings.push_back(move(newBooking));  // Add the booking to the list
     }
     else {
-        seatBooked = selectedFlight->bookBusinessSeat();
+        cout << "Flight not found!" << endl;
     }
-
-    if (!seatBooked) {
-        cout << "No available seats in " << seatClass << " class." << endl;
-        return;
-    }
-
-    // Create booking and associate it with the passenger
-    string bookingID = "B" + to_string(bookings.size() + 1);  // Simple ID generation
-    unique_ptr<Booking> newBooking = make_unique<Booking>(bookingID, selectedFlight.get(), this, seatClass);
-    bookings.push_back(move(newBooking));
-
-    cout << "Booking confirmed!" << endl;
-
-    // Now, we need to process payment (Payment is linked to booking)
-    Payment payment("P" + bookingID, selectedFlight->getDuration() * (seatClass == "Economy" ? 10000 : 20000), "Credit Card", "2025-02-01", bookings.back().get());
-    payment.processPayment();
 }
 
-// View booking for Passenger
 void Passenger::viewBooking(const vector<unique_ptr<Booking>>& bookings) {
     if (bookings.empty()) {
         cout << "No bookings found!" << endl;
         return;
     }
 
-    cout << "Your bookings: " << endl;
-    for (const auto& booking : bookings) {
-        cout << "Booking ID: " << booking->getBookingID() << ", Flight ID: " << booking->getFlight()->getFlightID()
-            << ", Seat Class: " << booking->getSeatClass() << ", Payment Status: " << booking->getPaymentStatus() << endl;
+    cout << "Your bookings:" << endl;
+    for (int i = 0; i < bookings.size(); ++i) {
+        cout << i + 1 << ". " << endl;
+        bookings[i]->getBookingDetails();  // Display the booking details
     }
 
     int bookingChoice;
@@ -104,47 +84,57 @@ void Passenger::viewBooking(const vector<unique_ptr<Booking>>& bookings) {
         return;
     }
 
-    // Display booking details
+    // Display selected booking details
     const unique_ptr<Booking>& selectedBooking = bookings[bookingChoice - 1];
-    selectedBooking->getFlight()->getFlightDetails();
-    cout << "Seat Class: " << selectedBooking->getSeatClass() << endl;
-    cout << "Payment Status: " << selectedBooking->getPaymentStatus() << endl;
+    selectedBooking->getBookingDetails();
 }
 
-// Cancel a booking for Passenger
+
 void Passenger::cancelBooking(vector<unique_ptr<Booking>>& bookings) {
-    if (bookings.empty()) {
-        cout << "No bookings found!" << endl;
-        return;
-    }
+    string bookingID;
+    cout << "Enter Booking ID to cancel: ";
+    cin >> bookingID;
 
-    cout << "Your bookings: " << endl;
-    for (int i = 0; i < bookings.size(); ++i) {
-        cout << i + 1 << ". Booking ID: " << bookings[i]->getBookingID() << " | Flight: " << bookings[i]->getFlight()->getFlightID()
-            << " | Seat Class: " << bookings[i]->getSeatClass() << endl;
-    }
+    auto it = find_if(bookings.begin(), bookings.end(), [&](const unique_ptr<Booking>& booking) {
+        return booking->getBookingID() == bookingID;
+        });
 
-    int bookingChoice;
-    cout << "Enter the number of the booking you want to cancel: ";
-    cin >> bookingChoice;
-
-    if (bookingChoice < 1 || bookingChoice > bookings.size()) {
-        cout << "Invalid booking choice!" << endl;
-        return;
-    }
-
-    unique_ptr<Booking>& selectedBooking = bookings[bookingChoice - 1];
-
-    if (selectedBooking->getPaymentStatus() == "Paid") {
-        selectedBooking->setBookingStatus("Cancelled");
-        selectedBooking->setPaymentStatus("Refunded");
-        cout << "Booking cancelled. 25% cancellation fee applied. Amount refunded." << endl;
+    if (it != bookings.end()) {
+        (*it)->cancelBooking();
+        bookings.erase(it);  // Remove the canceled booking from the list
     }
     else {
-        selectedBooking->setBookingStatus("Cancelled");
-        cout << "Booking cancelled. No payment made, no penalty." << endl;
+        cout << "Booking not found!" << endl;
     }
+}
+void Passenger::updateTravelProfile() {
+    string country;
+    cout << "Enter visited country to add to travel history: ";
+    cin >> country;
+    travelHistory.push_back(country);
+    cout << "Travel profile updated!" << endl;
+}
 
-    // Remove booking from list (simulating removal from system)
-    bookings.erase(bookings.begin() + (bookingChoice - 1));
+// Implement logout for Passenger
+void Passenger::logout() {
+    cout << "Logging out..." << endl;
+}
+
+// View profile for Passenger
+void Passenger::viewProfile() {
+    User::viewProfile();  // Call the base class function to display common user info
+    cout << "Passport Details: " << passportDetails << endl;
+    cout << "Travel History: ";
+    for (const auto& country : travelHistory) {
+        cout << country << " ";
+    }
+    cout << endl;
+}
+
+// Update profile for Passenger
+void Passenger::updateProfile() {
+    cout << "Updating profile..." << endl;
+    cout << "Enter new Passport Details: ";
+    cin >> passportDetails;
+    cout << "Profile updated!" << endl;
 }

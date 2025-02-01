@@ -13,8 +13,8 @@ private:
 
 public:
     // Constructor for initializing Admin object
-    Admin(string name, string email, string password, string CNIC, string adminID)
-        : User(name, email, password, CNIC), adminID(adminID) {}
+    Admin(string name, string email, string password, string CNIC, string adminID);
+
 
     // Getter and setter methods for adminID
     string getAdminID() const { return adminID; }

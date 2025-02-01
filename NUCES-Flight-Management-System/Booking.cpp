@@ -7,6 +7,17 @@ using namespace std;
 Booking::Booking(string bookingID, Flight* flight, Passenger* passenger, string seatClass)
     : bookingID(bookingID), flight(flight), passenger(passenger), seatClass(seatClass), paymentStatus("Pending"), bookingStatus("Pending") {}
 
+// Get and display booking details
+void Booking::getBookingDetails() const {
+    cout << "Booking ID: " << bookingID << endl;
+    cout << "Flight ID: " << flight->getFlightID() << endl;
+    cout << "From: " << flight->getDepartureCity() << " to " << flight->getArrivalCity() << endl;
+    cout << "Departure: " << flight->getDepartureTime() << " Arrival: " << flight->getArrivalTime() << endl;
+    cout << "Seat Class: " << seatClass << endl;
+    cout << "Payment Status: " << paymentStatus << endl;
+    cout << "Booking Status: " << bookingStatus << endl;
+}
+
 // Create a new booking
 void Booking::createBooking() {
     if (seatClass == "Economy") {

@@ -27,11 +27,8 @@ public:
     string getPaymentStatus() const { return paymentStatus; }
     string getBookingStatus() const { return bookingStatus; }
 
-    // Setter methods for updating booking details
-    void setBookingID(const string& id) { bookingID = id; }
-    void setSeatClass(const string& seat) { seatClass = seat; }
-    void setPaymentStatus(const string& status) { paymentStatus = status; }
-    void setBookingStatus(const string& status) { bookingStatus = status; }
+    // Method to get and display booking details
+    void getBookingDetails() const;
 
     // Create a new booking
     void createBooking();

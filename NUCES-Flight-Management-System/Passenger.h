@@ -3,7 +3,12 @@
 
 #include "User.h"
 #include <vector>
+#include <memory>  // Include for unique_ptr
 using namespace std;
+
+// Forward declarations of the Flight and Booking classes
+class Flight;
+class Booking;
 
 // Passenger class derived from User
 class Passenger : public User {
@@ -36,6 +41,7 @@ public:
     void bookFlight(vector<unique_ptr<Flight>>& availableFlights, vector<unique_ptr<Booking>>& bookings);
     void viewBooking(const vector<unique_ptr<Booking>>& bookings);
     void cancelBooking(vector<unique_ptr<Booking>>& bookings);
+    void updateTravelProfile();  // Declare the method
 };
 
 #endif // PASSENGER_H

@@ -5,14 +5,16 @@
 #include "Passenger.h"
 #include "Admin.h"
 #include "Flight.h"
-#include "Airport.h"
 #include "Booking.h"
+#include "Payment.h"
 #include "Validation.h"
 using namespace std;
 
 int main() {
+    // Initialize lists for users and flights
     vector<unique_ptr<User>> users;  // Store users (admin and passenger)
     vector<unique_ptr<Flight>> flights;  // Store flights
+    vector<unique_ptr<Booking>> bookings;  // Store bookings
 
     // Create a sample admin and a passenger
     unique_ptr<Admin> admin = make_unique<Admin>("admin", "admin@nafs.com", "Admin@1234", "12345-1234567-1", "admin01");
@@ -21,11 +23,12 @@ int main() {
     users.push_back(move(admin));
     users.push_back(move(passenger));
 
-    // Create a sample flight
+    // Create some sample flights
     unique_ptr<Flight> flight1 = make_unique<Flight>("FL123", "Islamabad", "Lahore", "10:00 AM", "12:00 PM", 2, 5, 2);
+    unique_ptr<Flight> flight2 = make_unique<Flight>("FL124", "Lahore", "Karachi", "01:00 PM", "03:00 PM", 3, 5, 2);
     flights.push_back(move(flight1));
+    flights.push_back(move(flight2));
 
-    // Sample main menu for the system
     int choice;
     while (true) {
         cout << "\nMain Menu:" << endl;
@@ -46,6 +49,39 @@ int main() {
                     if (adminPtr->getAdminID() == adminID) {
                         loggedIn = true;
                         adminPtr->login();
+
+                        // Admin Actions
+                        int adminChoice;
+                        while (true) {
+                            cout << "\nAdmin Menu:" << endl;
+                            cout << "1. Add Flight" << endl;
+                            cout << "2. Edit Flight Schedule" << endl;
+                            cout << "3. Block Flight" << endl;
+                            cout << "4. View Bookings" << endl;
+                            cout << "5. Logout" << endl;
+                            cout << "Enter your choice: ";
+                            cin >> adminChoice;
+
+                            if (adminChoice == 1) {
+                                adminPtr->addFlight();
+                            }
+                            else if (adminChoice == 2) {
+                                adminPtr->editFlightSchedule();
+                            }
+                            else if (adminChoice == 3) {
+                                adminPtr->blockFlight();
+                            }
+                            else if (adminChoice == 4) {
+                                adminPtr->manageFlightBookings();
+                            }
+                            else if (adminChoice == 5) {
+                                cout << "Logging out..." << endl;
+                                break;  // Exit the admin menu and return to main menu
+                            }
+                            else {
+                                cout << "Invalid choice, try again!" << endl;
+                            }
+                        }
                         break;
                     }
                 }
@@ -65,6 +101,39 @@ int main() {
                     if (passengerPtr->getCNIC() == CNIC) {
                         loggedIn = true;
                         passengerPtr->login();
+
+                        // Passenger Actions
+                        int passengerChoice;
+                        while (true) {
+                            cout << "\nPassenger Menu:" << endl;
+                            cout << "1. Book Flight" << endl;
+                            cout << "2. View Booking" << endl;
+                            cout << "3. Cancel Booking" << endl;
+                            cout << "4. Update Travel Profile" << endl;
+                            cout << "5. Logout" << endl;
+                            cout << "Enter your choice: ";
+                            cin >> passengerChoice;
+
+                            if (passengerChoice == 1) {
+                                passengerPtr->bookFlight(flights, bookings);
+                            }
+                            else if (passengerChoice == 2) {
+                                passengerPtr->viewBooking(bookings);
+                            }
+                            else if (passengerChoice == 3) {
+                                passengerPtr->cancelBooking(bookings);
+                            }
+                            else if (passengerChoice == 4) {
+                                passengerPtr->updateTravelProfile();
+                            }
+                            else if (passengerChoice == 5) {
+                                cout << "Logging out..." << endl;
+                                break;  // Exit the passenger menu and return to main menu
+                            }
+                            else {
+                                cout << "Invalid choice, try again!" << endl;
+                            }
+                        }
                         break;
                     }
                 }
@@ -74,7 +143,7 @@ int main() {
             }
         }
         else if (choice == 3) {
-            break;  // Exit the system
+            break;  // Exit the program
         }
         else {
             cout << "Invalid choice! Please try again." << endl;
