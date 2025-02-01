@@ -22,18 +22,25 @@ bool Validation::validatePassword(const string& password) {
         return false;
     }
 
+    // Password strength regex (minimum 1 lowercase, 1 uppercase, 1 digit, and 1 special character)
     regex passwordRegex("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{8,}$");
-    if (regex_match(password, passwordRegex)) {
-        return true;
-    }
-    else {
+    if (!regex_match(password, passwordRegex)) {
         cout << "Password must contain at least one lowercase letter, one uppercase letter, one digit, and one special character." << endl;
         return false;
     }
+
+    // Additional password complexity check (e.g., enforcing at least 2 digits or 2 special characters)
+    if (count(password.begin(), password.end(), '@') + count(password.begin(), password.end(), '#') < 2) {
+        cout << "Password must contain at least two special characters like '@' or '#'. Please choose a stronger password." << endl;
+        return false;
+    }
+
+    return true;
 }
 
 // Validate email format
 bool Validation::validateEmail(const string& email) {
+    // Simple regex for validating emails
     regex emailRegex("^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$");
     if (regex_match(email, emailRegex)) {
         return true;

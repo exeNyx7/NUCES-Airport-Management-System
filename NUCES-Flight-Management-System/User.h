@@ -2,7 +2,6 @@
 #define USER_H
 
 #include <string>
-#include <iostream>
 using namespace std;
 
 // Base class for common user attributes and methods
@@ -15,10 +14,20 @@ protected:
 
 public:
     // Constructor for initializing the User object
-    User(string name, string email, string password, string CNIC)
-        : name(name), email(email), password(password), CNIC(CNIC) {}
+    User(string name, string email, string password, string CNIC);
 
-    // Getter and setter methods for name, email, password, and CNIC
+    // Virtual destructor for proper cleanup
+    virtual ~User();
+
+    // Virtual login and logout methods (to be implemented in derived classes)
+    virtual void login() = 0;
+    virtual void logout() = 0;
+
+    // View and update user profile
+    virtual void viewProfile();
+    virtual void updateProfile();
+
+    // Getters and setters
     string getName() const { return name; }
     void setName(const string& name) { this->name = name; }
 
@@ -30,13 +39,6 @@ public:
 
     string getCNIC() const { return CNIC; }
     void setCNIC(const string& CNIC) { this->CNIC = CNIC; }
-
-    virtual void login() = 0;
-    virtual void logout() = 0;
-    virtual void viewProfile() = 0;
-    virtual void updateProfile() = 0;
-
-    virtual ~User() {}
 };
 
 #endif // USER_H

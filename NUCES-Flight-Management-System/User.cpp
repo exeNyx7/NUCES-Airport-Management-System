@@ -31,4 +31,9 @@ void User::viewProfile() {
 // Update profile method (virtual, will be overridden)
 void User::updateProfile() {
     cout << "Update your details here." << endl;
+    cout << "Enter new Name: ";
+    cin >> name;
+    cout << "Enter new Email: ";
+    cin >> email;
+    cout << "Profile updated!" << endl;
 }
